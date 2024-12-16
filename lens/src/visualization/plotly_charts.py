@@ -262,3 +262,28 @@ class LensVisualizer:
         )
         
         return fig
+    
+    @staticmethod
+    def model_metrics_plot(metrics_history: Dict[str, List[float]]) -> go.Figure:
+        """Create visualization for model metrics over time."""
+        fig = go.Figure()
+        
+        for metric_name, values in metrics_history.items():
+            fig.add_trace(go.Scatter(
+                x=list(range(len(values))),
+                y=values,
+                mode='lines+markers',
+                name=metric_name,
+                text=[f'{v:.3f}' for v in values],
+                hovertemplate='%{text}'
+            ))
+            
+        fig.update_layout(
+            title='Model Metrics History',
+            xaxis_title='Iteration',
+            yaxis_title='Metric Value',
+            template='plotly_white',
+            showlegend=True
+        )
+        
+        return fig
