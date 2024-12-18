@@ -1,6 +1,6 @@
 import plotly.graph_objects as go
 import plotly.express as px
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 import numpy as np
 
 class LensVisualizer:
@@ -282,6 +282,48 @@ class LensVisualizer:
             title='Model Metrics History',
             xaxis_title='Iteration',
             yaxis_title='Metric Value',
+            template='plotly_white',
+            showlegend=True
+        )
+        
+        return fig
+    
+    @staticmethod
+    def clustering_plot(X: np.ndarray, labels: np.ndarray, 
+                       centroids: Optional[np.ndarray] = None) -> go.Figure:
+        """Create visualization for clustering results."""
+        fig = go.Figure()
+        
+        # Plot data points colored by cluster
+        unique_labels = np.unique(labels)
+        for label in unique_labels:
+            mask = labels == label
+            fig.add_trace(go.Scatter(
+                x=X[mask, 0],
+                y=X[mask, 1],
+                mode='markers',
+                name=f'Cluster {label}',
+                marker=dict(size=8)
+            ))
+            
+        # Plot centroids if available
+        if centroids is not None:
+            fig.add_trace(go.Scatter(
+                x=centroids[:, 0],
+                y=centroids[:, 1],
+                mode='markers',
+                name='Centroids',
+                marker=dict(
+                    symbol='star',
+                    size=15,
+                    line=dict(width=2)
+                )
+            ))
+            
+        fig.update_layout(
+            title='Clustering Results',
+            xaxis_title='Feature 1',
+            yaxis_title='Feature 2',
             template='plotly_white',
             showlegend=True
         )
